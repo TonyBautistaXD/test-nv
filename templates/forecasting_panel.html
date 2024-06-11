@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+<!-- Page Content  -->
+{% block content %}
+<div class="row content">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="#" id="sidebarCollapse">
+                <i class="bi bi-layout-sidebar"></i>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a> Dashboards  /  Panel de Precisión de Pronósticos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" id="boxfilterforecasting">
+        <div class="row" style="margin-top:20px; display: flex;" id="boxfilterzone">
+            <span class="titles-predictia">Panel de Precisión de Pronósticos</span>
+        </div>
+        <div class="row" style="margin-top:20px" id="boxesrow">
+            <div class="col">
+                <div class="container filterboxes">
+                    <div class="row boxheader">MAPE</div>
+                    <div class="row boxdescription">Múltiples periodos seleccionados</div>
+                    <div class="row customrowboxes">
+                        <span class="data-label-percentage" style="color: {% if mape_avg > 0 %}#44D300;{% else %}#C61A1A{% endif %}">{{mape_avg}}%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="container filterboxes">
+                    <div class="row boxheader">MAPE</div>
+                    <div class="row boxdescription">El mes pasado</div>
+                    <div class="row customrowboxes">
+                        <div class="col">
+                            <span class="data-label-percentage" style="color: {% if mape_last_month > 0 %}#44D300;{% else %}#C61A1A{% endif %}">{{mape_last_month}}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="container filterboxes">
+                    <div class="row boxheader">BIAS</div>
+                    <div class="row boxdescription">Múltiples periodos seleccionados</div>
+                    <div class="row customrowboxes">
+                        <div class="col">
+                            <span class="data-label-percentage" style="color: {% if bias_avg > 0 %}#44D300;{% else %}#C61A1A{% endif %}">{{bias_avg}}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="container filterboxes">
+                    <div class="row boxheader">BIAS Last month</div>
+                    <div class="row boxdescription">El mes pasado</div>
+                    <div class="row customrowboxes">
+                        <div class="col">
+                            <span class="data-label-percentage" style="color: {% if bias_last_month > 0 %}#44D300;{% else %}#C61A1A{% endif %}">{{bias_last_month}}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px;margin-bottom: 30px;">
+            <div class="col">
+                <p id="loading_forecasting_bars" style="display: none">Cargando datos desde el servidor...</p>
+                <canvas id="myChartForecastingBars"></canvas>
+            </div>
+            <div class="col">
+                <p id="loading_forecasting_bars_vertical" style="display: none">Cargando datos desde el servidor...</p>
+                <canvas id="myChartForecastingBarsVertical"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var myChartForecastingBars = new Chart("myChartForecastingBars", {
+            type: "bar",
+            data: {{mape_data|tojson}},
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                     } 
+                },
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var myChartForecastingBarsVertical = new Chart("myChartForecastingBarsVertical", {
+            type: 'bar',
+            data: {{bias_data|tojson}},
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                }
+            }
+        }
+        });
+
+        function show_loader(id_loader){
+            id_loader.show();
+        }
+        
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>PREDICTIA - XALDIGITAL</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href={{ url_for('static', filename="assets/vendor/bootstrap/css/bootstrap.min.css") }} rel="stylesheet">
+  <link href={{ url_for('static', filename="assets/vendor/bootstrap-icons/bootstrap-icons.css") }} rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href={{ url_for('static', filename="assets/css/style.css") }} rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="wrapper">
+  <!-- Sidebar  -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <span id="logo">PREDICTIA</span>
+    </div>
+    <p class="titlesectionsidebar">Inicio</p>
+    <ul>
+      <a href="{{ url_for('index') }}" class="itemsidebar"><i class="bi bi-house"></i> Visión general</a>
+    </ul>
+    <p class="titlesectionsidebar">Predicciones</p>
+    <ul>
+      <a href="{{ url_for('metricas_error') }}" class="itemsidebar"><i class="bi bi-graph-up"></i> Métricas de error</a>
+    </ul>
+    <p class="titlesectionsidebar">Sesión</p>
+    <ul>  
+      <a href="{{ url_for('logout') }}" type="button" class="itemsidebar"><i class="bi bi-door-closed"></i> Cerrar sesión</a>
+    </ul>
+    <div style="text-align:center;margin-top: 300px">
+      <div>
+        <img src={{ url_for('static', filename="assets/img/logoxalpredictia.png") }} alt="Logo PredictIA XALDIGITAL" class="logoxaldigital">
+      </div>
+      <div>
+        <img src={{ url_for('static', filename="assets/img/erizoxaldigital.png") }} alt="Logo Erizo XALDIGITAL" class="logoerizo">
+      </div>
+    </div>
+
+  </nav>
+  <!-- Page Content  -->
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+          $('#sidebar').toggleClass('active');
+      });
+  });
+</script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.982.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+{% block extrajs %}
+{% endblock %}
+</body>
+</html>

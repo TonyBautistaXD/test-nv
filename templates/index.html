@@ -1,0 +1,726 @@
+{% extends "base.html" %}
+<!-- Page Content  -->
+{% block content %}
+<div class="row content">
+  <nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a href="#" id="sidebarCollapse">
+      <i class="bi bi-layout-sidebar"></i>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a>Dashboards  /  Inicio</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container-fluid">
+    <div class="row" style="margin-top:20px; display: flex;">
+      <div class="col-5">
+        <div class="row">
+          <span class="titles-predictia">ANÁLISIS DE DATOS, PRONÓSTICOS Y ÓRDENES DE COMPRA</span>
+          <div class="upload-container" id="drop-area">
+            <img src={{ url_for('static', filename="assets/img/Cloud.png") }} alt="Upload Icon" class="upload-image">
+            <span class="upload-text">Arrastra el archivo CSV aquí</span>
+            <button class="browse-btn" onclick="document.getElementById('fileInput').click()">Seleccionar archivo</button>
+            <input type="file" id="fileInput" class="browse-btn" accept=".csv">
+          </div>
+
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-file-earmark-spreadsheet"></i></span>
+            <input type="text" id="predictiafilename" class="form-control" placeholder="..." readonly>
+            <a class="btn btn-outline-secondary" id="removefile"><i class="bi bi-x"></i></a>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <span class="titlesectionsidebar">La siguiente tabla muestra la estructura del archivo CSV a importar.
+            Al subir un archivo podrá ver las primeras líneas importadas.
+          </span>
+          <table id="dynamicTable" style="margin-top:10px">
+            <thead>
+            <tr>
+              <th></th>
+              <th>unique_id</th>
+              <th>ds</th>
+              <th>y</th>
+            </tr>
+            <!-- Table headers will be dynamically added here -->
+            </thead>
+            <tbody>
+            <tr>
+              <td>0</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <!-- Table body will be dynamically filled here -->
+            </tbody>
+          </table>
+
+          <div class="form-group" style="margin-top:10px">
+            <input type="number" class="form-control" id="forecast_days" aria-describedby="forecast_days" placeholder="Ingresa días para el pronóstico" required>
+          </div>
+          <button type="button" class="btn" id="btnsendfile" style="margin-top:10px; display: none">
+            <span class="bi bi-send"> Enviar </span>
+          </button>
+
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <span id="analisis_information_text" style="white-space: pre-line;">{{info_text_insights}}</span>
+        </div>
+      </div>
+
+      <div class="col-7">
+        <div class="col-md-6 col-half-height">
+          <span class="titles-predictia">ESTRATEGIA DE VENTA</span>
+          <div id="loadingMessage" style="display: none;">Cargando PDF, por favor espere...</div>
+          <div id="pdfContainerHistorical">
+            <div id="pdfViewerHistorical">
+              <br><br>
+            </div>
+          </div>
+        </div>
+    
+        <div class="col-md-6 col-half-height">
+          <span class="titles-predictia">ORDEN DE COMPRA</span>
+          <div id="loadingMessage2" style="display: none;">Cargando PDF, por favor espere...</div>
+          <div id="pdfContainerHistorical">
+            <div id="pdfViewerHistorical">
+              <iframe id="pdfFrame" style="width: 90%; height: 300px;" hidden></iframe> <!-- Tamaño fijo -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+
+      <div class="col-5">
+        <br>
+        <br>
+        <div class="row">
+          <span class="titles-predictia">2° ANÁLISIS DE DATOS</span>
+          <div class="upload-container" id="drop-area2">
+            <img src={{ url_for('static', filename="assets/img/Cloud.png") }} alt="Upload Icon" class="upload-image">
+            <span class="upload-text">Arrastra el archivo CSV aquí</span>
+            <button class="browse-btn" onclick="document.getElementById('fileInput2').click()">Seleccionar archivo</button>
+            <input type="file" id="fileInput2" class="browse-btn" accept=".csv">
+          </div>
+
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-file-earmark-spreadsheet"></i></span>
+            <input type="text" id="predictiafilename2" class="form-control" placeholder="..." readonly>
+            <a class="btn btn-outline-secondary" id="removefile2"><i class="bi bi-x"></i></a>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:20px">
+          <span class="titlesectionsidebar">La siguiente tabla muestra la estructura del archivo CSV a importar.
+            Al subir un archivo podrá ver las primeras líneas importadas.
+          </span>
+          <table id="dynamicTable2" style="margin-top:10px">
+            <thead>
+            <tr>
+              <th></th>
+              <th>unique_id</th>
+              <th>ds</th>
+              <th>y</th>
+            </tr>
+            <!-- Table headers will be dynamically added here -->
+            </thead>
+            <tbody>
+            <tr>
+              <td>0</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>unique_id</td>
+              <td>0000000</td>
+              <td>0000000</td>
+            </tr>
+            <!-- Table body will be dynamically filled here -->
+            </tbody>
+          </table>
+
+          <div class="form-group" style="margin-top:10px">
+            <input type="number" class="form-control" id="forecast_days" aria-describedby="forecast_days" placeholder="Ingresa días para el pronóstico" required>
+          </div>
+          <button type="button" class="btn" id="btnsendfile2" style="margin-top:10px; display: none">
+            <span class="bi bi-send"> Enviar </span>
+          </button>
+
+        </div>
+
+      </div>
+      
+    </div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    cargarVistaPrevia();
+    showPdf();
+  });
+
+  function cargarVistaPrevia() {
+    // Mostrar el mensaje de carga
+    document.getElementById('loadingMessage').style.display = 'block';
+
+    // Realizar una solicitud POST a tu ruta Flask para obtener el PDF
+    fetch('/process_json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8' // Añadir la codificación de caracteres utf-8
+        }
+    })
+    .then(response => response.blob()) // Convertir la respuesta en un blob
+    .then(blob => {
+        // Crear una URL para el blob (el PDF)
+        const pdfUrl = URL.createObjectURL(blob);
+
+        // Mostrar el PDF en el div
+        const embed = document.createElement('embed');
+        embed.src = pdfUrl;
+        embed.type = 'application/pdf';
+        embed.width = '90%';
+        embed.height = '90%';
+        document.getElementById('pdfViewerHistorical').appendChild(embed);
+
+        // Agregar un enlace para descargar el PDF
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = 'Estrategia_de_venta.pdf'; // Nombre del archivo a descargar
+       // link.innerText = 'Descargar PDF';
+        document.getElementById('pdfContainerHistorical').appendChild(link);
+
+        // Ocultar el mensaje de carga
+        document.getElementById('loadingMessage').style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+
+        // Ocultar el mensaje de carga incluso si hay un error
+        document.getElementById('loadingMessage').style.display = 'none';
+    });
+}
+  
+
+function showPdf() {
+      const iframe = document.getElementById('pdfFrame');
+      const loadingMessage2 = document.getElementById('loadingMessage2');
+
+      loadingMessage2.style.display = 'block'; // Muestra el mensaje de carga
+      iframe.hidden = true; // Oculta el iframe inicialmente
+
+      // Maneja el evento de carga del iframe
+      iframe.onload = function() {
+        loadingMessage2.style.display = 'none'; // Oculta el mensaje de carga
+        iframe.hidden = false; // Muestra el iframe
+      };
+
+      // Establece la src del iframe para cargar el PDF
+      iframe.src = '/ORDEN-COMPRA';
+    }
+</script>
+
+<!-- Contenedor para la tabla -->
+<div id="tableContainerHistorical"></div>
+<div id="loadingMessage" style="display: none;">Cargando...</div>
+
+<script type="text/javascript">
+  // Obtener el área de arrastrar y soltar
+const dropArea = document.getElementById('drop-area');
+
+// Eventos de arrastrar y soltar
+dropArea.addEventListener('dragenter', (e) => {
+  e.preventDefault();
+  dropArea.style.backgroundColor = '#F7F9FB';
+});
+
+dropArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+});
+
+dropArea.addEventListener('dragleave', () => {
+  dropArea.style.backgroundColor = '#F7F9FB';
+});
+
+dropArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropArea.style.backgroundColor = '#F7F9FB';
+  const files = e.dataTransfer.files;
+  console.log(files)
+  // Check if any files were dropped
+  if (files.length > 0 && files.length == 1) {
+    if (files[0].type === 'text/csv' || files[0].name.toLowerCase().endsWith('.csv')){
+      handleFiles(files);
+    }else{
+      Swal.fire({
+        title: "Información",
+        text: 'Solo se permiten cargar archivos con formato CSV',
+        confirmButtonColor: '#000000',
+      });
+    }
+  }else{
+    Swal.fire({
+      title: "Información",
+      text: 'Solo se permite cargar 1 archivo a la vez',
+      confirmButtonColor: '#000000',
+    });
+  }
+
+
+});
+
+// Manejar los archivos seleccionados
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  console.log(e);
+  
+ const files = e.target.files;
+  console.log('====');
+  handleFiles(files);
+});
+
+document.getElementById('fileInput2').addEventListener('change', (e) => {
+  console.log(e);
+  
+ const files = e.target.files;
+  console.log('*+*+**+');
+  handleFiles2(files);
+});
+// Función para manejar los archivos
+function handleFiles(files) {
+  // Aquí puedes procesar los archivos, como enviarlos a un servidor, etc.
+  filename = files[0].name;
+  $('#predictiafilename').val(filename);
+}
+$('#removefile').click(function() {
+  $('#fileInput').val('');
+  $('#predictiafilename').val('');
+  clean_table();
+});
+
+function handleFiles2(files) {
+  // Aquí puedes procesar los archivos, como enviarlos a un servidor, etc.
+  filename = files[0].name;
+  $('#predictiafilename2').val(filename);
+}
+$('#removefile2').click(function() {
+  $('#fileInput2').val('');
+  $('#predictiafilename2').val('');
+  clean_table2();
+});
+
+function clean_table(){
+  $('#dynamicTable thead').empty();
+  $('#dynamicTable tbody').empty();
+}
+
+function clean_fileinput(){
+  $('#fileInput').val('');
+  $('#predictiafilename').val('');
+}
+
+function clean_table2(){
+  $('#dynamicTable2 thead').empty();
+  $('#dynamicTable2 tbody').empty();
+}
+
+function clean_fileinput2(){
+  $('#fileInput2').val('');
+  $('#predictiafilename2').val('');
+}
+
+$(document).ready(function() {
+
+  // Send CSV file to S3
+  $('#btnsendfile').click(function() {
+        var file = document.getElementById('fileInput').files[0];
+        var formData = new FormData();
+        formData.append('file', $('#fileInput')[0].files[0]);
+
+        if (!file) {
+            Swal.fire({
+              title: "Información",
+              text: 'Por favor selecciona un archivo',
+              confirmButtonColor: '#000000',
+            });
+            return;
+        }
+
+        $.ajax({
+          url: '{{ url_for('upload_to_server') }}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function(){
+            Swal.fire({
+              title: "Información",
+              text: "Subiendo archivo al servidor...",
+              confirmButtonColor: '#000000',
+            });
+          }
+        })
+        .done(function(data) {
+          Swal.close();
+          Swal.fire({
+            title: "Información",
+            text: data,
+            confirmButtonColor: '#000000',
+            icon: "success"
+          });
+        })
+        .fail(function(jqXHR) {
+          Swal.close();
+          Swal.fire({
+            title: "Error",
+            text: "Error subiendo el archivo al servidor",
+            confirmButtonColor: '#000000',
+          });
+      });
+
+    });
+
+    $('#btnsendfile2').click(function() {
+        var file = document.getElementById('fileInput2').files[0];
+        var formData = new FormData();
+        formData.append('file', $('#fileInput2')[0].files[0]);
+
+        if (!file) {
+            Swal.fire({
+              title: "Información",
+              text: 'Por favor selecciona un archivo',
+              confirmButtonColor: '#000000',
+            });
+            return;
+        }
+
+        $.ajax({
+          url: '{{ url_for('upload_to_server') }}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function(){
+            Swal.fire({
+              title: "Información",
+              text: "Subiendo archivo al servidor...",
+              confirmButtonColor: '#000000',
+            });
+          }
+        })
+        .done(function(data) {
+          Swal.close();
+          Swal.fire({
+            title: "Información",
+            text: data,
+            confirmButtonColor: '#000000',
+            icon: "success"
+          });
+        })
+        .fail(function(jqXHR) {
+          Swal.close();
+          Swal.fire({
+            title: "Error",
+            text: "Error subiendo el archivo al servidor",
+            confirmButtonColor: '#000000',
+          });
+      });
+
+    });
+
+
+    
+  function arraysAreEqual(arr1, arr2) {
+      if (arr1.length !== arr2.length) {
+          return false;
+      }
+      for (var i = 0; i < arr1.length; i++) {
+          if (arr1[i] !== arr2[i]) {
+              return false;
+          }
+      }
+      return true;
+  }
+
+  // Event listener para cuando se selecciona un archivo
+  $('#fileInput').change(function(e) {
+    console.log('2');
+    //console.log(e);
+      var file = e.target.files[0];
+      if (file){
+          var reader = new FileReader(); // Crear un objeto FileReader
+          // Event listener para cuando se completa la lectura del archivo
+          reader.onload = function(event) {
+              var content = event.target.result; // Obtener el contenido del archivo
+              var lines = content.split('\n'); // Dividir el contenido en líneas
+              // Checking if there are more lines in file
+              if (lines.length > 0) {
+                  var headers = lines[0].trim().split(','); // Obtener el encabezado
+
+                  // headers must be 3 to ensure the file is correct
+                  var array_to_compare_headers = ["unique_id", "ds", "y"];
+
+                  if (headers.length === 3 && arraysAreEqual(headers, array_to_compare_headers)){
+                      clean_table();
+                      // Create table headers dynamically
+                      var thead = $('#dynamicTable thead');
+                      var tr = $('<tr>');
+                      $.each(headers, function(index, header) {
+                          tr.append('<th>' + header + '</th>');
+                      });
+                      thead.append(tr);
+
+                      // processing preview for only 5 lines more
+                      new_lines = lines.slice(1, 5);
+                      var tbody = $('#dynamicTable tbody');
+                      $.each(new_lines, function(index, rowData) {
+                          var tr = $('<tr>');
+                          $.each(rowData.trim().split(','), function(index, cellData) {
+                              tr.append('<td>' + cellData + '</td>');
+                          });
+                          tbody.append(tr);
+                      });
+                      $("#btnsendfile").show();
+                  }else{
+                    clean_fileinput();
+                    Swal.fire({
+                      title: "Información",
+                      text: "El archivo CSV debe tener 3 cabeceras: unique_id, ds, y",
+                      confirmButtonColor: '#000000',
+                    });
+                  }
+              }else{
+                clean_fileinput();
+                Swal.fire({
+                  title: "Información",
+                  text: 'El archivo CSV está vacío',
+                  confirmButtonColor: '#000000',
+                });
+              }
+          };
+          // Read only the first portion of the file (up to the first newline character after the fifth line)
+          var blob = file.slice(0, 1024 * 1024); // Read up to 1MB of data
+          reader.readAsText(blob);
+      }else{
+        Swal.fire({
+          title: "Información",
+          text: "No ha sido seleccionado ningun archivo",
+          confirmButtonColor: '#000000',
+        });
+      }
+    });
+
+    $('#fileInput2').change(function(e) {
+    console.log('2');
+    //console.log(e);
+      var file = e.target.files[0];
+      if (file){
+          var reader = new FileReader(); // Crear un objeto FileReader
+          // Event listener para cuando se completa la lectura del archivo
+          reader.onload = function(event) {
+              var content = event.target.result; // Obtener el contenido del archivo
+              var lines = content.split('\n'); // Dividir el contenido en líneas
+              // Checking if there are more lines in file
+              if (lines.length > 0) {
+                  var headers = lines[0].trim().split(','); // Obtener el encabezado
+
+                  // headers must be 3 to ensure the file is correct
+                  var array_to_compare_headers = ["unique_id", "ds", "y"];
+
+                  //if (headers.length === 3 && arraysAreEqual(headers, array_to_compare_headers)){
+                    if (headers.length > 0){
+                      clean_table2();
+                      // Create table headers dynamically
+                      var thead = $('#dynamicTable2 thead');
+                      var tr = $('<tr>');
+                      $.each(headers, function(index, header) {
+                          tr.append('<th>' + header + '</th>');
+                      });
+                      thead.append(tr);
+
+                      // processing preview for only 5 lines more
+                      new_lines = lines.slice(1, 5);
+                      var tbody = $('#dynamicTable2 tbody');
+                      $.each(new_lines, function(index, rowData) {
+                          var tr = $('<tr>');
+                          $.each(rowData.trim().split(','), function(index, cellData) {
+                              tr.append('<td>' + cellData + '</td>');
+                          });
+                          tbody.append(tr);
+                      });
+                      $("#btnsendfile2").show();
+                  }else{
+                    clean_fileinput2();
+                    Swal.fire({
+                      title: "Información",
+                      text: "El archivo CSV debe tener 3 cabeceras: unique_id, ds, y",
+                      confirmButtonColor: '#000000',
+                    });
+                  }
+              }else{
+                clean_fileinput2();
+                Swal.fire({
+                  title: "Información",
+                  text: 'El archivo CSV está vacío',
+                  confirmButtonColor: '#000000',
+                });
+              }
+          };
+          // Read only the first portion of the file (up to the first newline character after the fifth line)
+          var blob = file.slice(0, 1024 * 1024); // Read up to 1MB of data
+          reader.readAsText(blob);
+      }else{
+        Swal.fire({
+          title: "Información",
+          text: "No ha sido seleccionado ningun archivo",
+          confirmButtonColor: '#000000',
+        });
+      }
+    });
+    
+
+    function loading_data(loading_element_id){
+      $("#"+loading_element_id).show();
+    }
+
+    /* Logic myChartHistoricalData */
+    var myChartHistoricalData = new Chart("myChartDatosHistoricos", {
+      type: "line",
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+          },
+          title: {
+            display: false,
+          }
+        },
+      },
+    });
+
+    $.ajax(
+        {
+          url:"{{ url_for('invoke_lambda_historical') }}"+"?ids="+{{unique_ids}}.join(','),
+          type: 'get',
+          beforeSend: loading_data("loading_data_historical_data"),
+        })
+      .done(function(data) {
+          $("#loading_data_historical_data").hide();
+          myChartHistoricalData.config.data.datasets = data.unique_ids_data;
+          myChartHistoricalData.config.data.labels = data.labels;
+          myChartHistoricalData.update();
+      })
+      .fail(function(jqXHR) {
+        console.log("data");
+      });
+
+    /* End Logic myChartHistoricalData */
+
+
+    /* Logic myChartDatosPronosticados */
+    var myChartDatosPronosticados = new Chart("myChartDatosPronosticados", {
+      type: "line",
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+          },
+          title: {
+            display: false,
+          }
+        },
+      },
+    });
+
+    $.ajax(
+      {
+        url:"{{ url_for('invoke_lambda_forecasted_data') }}"+"?ids="+{{unique_ids}}.join(','),
+        type: 'get',
+        beforeSend: loading_data("loading_data_forecasted_data"),
+      })
+    .done(function(data) {
+        $("#loading_data_forecasted_data").hide();
+        myChartDatosPronosticados.config.data.datasets = data.unique_ids_data;
+        myChartDatosPronosticados.config.data.labels = data.labels;
+        myChartDatosPronosticados.update();
+    })
+    .fail(function(jqXHR) {
+      console.log("data");
+    });
+    /* End Logic myChartDatosPronosticados */
+});
+</script>
+
+<script>
+  $(document).ready(function() {
+
+
+
+  });
+</script>
+
+
+
+
+
+
+
+<!-- ********************************************************************************** -->
+
+
+
+</script>
+
+
+{% endblock %}

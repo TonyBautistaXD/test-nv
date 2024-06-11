@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+<!-- Page Content  -->
+{% block content %}
+<div class="row content">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="#" id="sidebarCollapse">
+                <i class="bi bi-layout-sidebar"></i>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a> Dashboards  /  Gráfico Datos Históricos</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        {% include "boxfiltergeneric.html" %}
+        <div class="row" style="margin-top:20px;margin-bottom: 30px;">
+            <div class="col">
+                <p id="loading_historical_data" style="display: none">Cargando datos desde el servidor...</p>
+                <canvas id="myChartHistoricalDataExpanded"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrajs %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('#{{select_panel_name}}').select2({
+            width: '100%',
+            ajax: {
+                url: "{{ url_for('invoke_lambda_ids') }}",
+                processResults: function (data) {
+                  // Transforms the top-level key of the response object from 'items' to 'results'
+                  const ids = data;
+                  const results = ids.map(id => ({ "id": id, "text": id }));
+                  return {
+                    results
+                  };
+                }
+              }
+        });
+
+        var myChartHistoricalDataExpanded = new Chart("myChartHistoricalDataExpanded", {
+            type: "line",
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                title: {
+                  display: false,
+                }
+              }
+            },
+          });
+
+        
+
+        function show_loader(id_loader){
+            id_loader.show();
+        }
+
+        function get_choices_product_names(){
+            var selectedOptions = $('#{{select_panel_name}}').select2('data');
+                var selectedOptionNames = selectedOptions.map(function(option) {
+                    return option.id;
+                });
+                return selectedOptionNames;
+        }
+
+        // Action for Apply Filter on Charts
+        $('#apply_filter').click(function() {
+            var products_to_filter_data = get_choices_product_names();
+            load_data_for_charts(products_to_filter_data);
+        });
+        
+        function load_data_for_charts(products_to_filter=[]){
+            var endpoint_xaldigital = "{{ url_for('invoke_lambda_historical') }}";
+            if (products_to_filter.length > 0){
+                // Ajax for myChartHistoricalDataExpanded
+                $.ajax({
+                    url: endpoint_xaldigital+"?ids="+products_to_filter.join(','),
+                    type: 'get',
+                    beforeSend: function(){
+                        show_loader($("#loading_historical_data"))
+                    }
+                })
+                .done(function(data) {
+                    $("#loading_historical_data").hide();
+                    var labels_custom = data.labels;
+                    var data_chart = data.unique_ids_data;
+                    // fill depending on products in the response
+                    myChartHistoricalDataExpanded.config.data.labels = labels_custom;
+                    myChartHistoricalDataExpanded.config.data.datasets = data_chart;
+                    myChartHistoricalDataExpanded.update();
+                })
+                .fail(function(jqXHR) {
+                    console.log("data");
+                });
+            }else{
+                Swal.fire({
+                    title: "Información",
+                    text: 'Selecciona productos para generar la gráfica',
+                    confirmButtonColor: '#000000',
+                  });
+            }
+            
+            
+        }
+        
+    });
+</script>
+{% endblock %}
