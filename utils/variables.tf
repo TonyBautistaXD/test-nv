@@ -64,7 +64,7 @@ variable "ssh_key_pair_name" {
 variable "github_repo" {
  type        = string
  description = "Repo with the Flask code. Change remote exec to use private repo"
- default     = "https://github.com/TonyBautistaXD/test.git"
+ default     = "https://github.com/TonyBautistaXD/test-nv.git"
 }
 
 variable "private_key_ec2_path" {
