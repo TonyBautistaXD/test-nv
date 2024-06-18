@@ -17,9 +17,9 @@ app = Flask(__name__)
 app.secret_key = 'xaldigital!'
 AWS_REGION_PREDICTIA = os.getenv("region_aws")
 bucket_name = os.getenv("bucket_name")
-#accessKeyId = os.getenv("accessKeyId")
-#secretAccessKey = os.getenv("secretAccessKey")
-#sessionToken = os.getenv("sessionToken")
+accessKeyId = os.getenv("accessKeyId")
+secretAccessKey = os.getenv("secretAccessKey")
+sessionToken = os.getenv("sessionToken")
 arn_forecast_lambda=os.getenv("lambda_forecast_arn")
 arn_ids_lambda=os.getenv("lambda_get_ids_arn")
 arn_insights_lambda=os.getenv("lambda_get_insights")
@@ -34,14 +34,9 @@ arn_url_csv_lambda= os.getenv("url_csv")
 #print(USER_POOL_ID_COGNITO)
 
 # boto3 clients
-#cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
-#lambda_client = boto3.client('lambda', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
-#s3_client = boto3.client('s3', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
-
-cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION_PREDICTIA)
-lambda_client = boto3.client('lambda', region_name=AWS_REGION_PREDICTIA)
-s3_client = boto3.client('s3', region_name=AWS_REGION_PREDICTIA)
-
+cognito_client = boto3.client('cognito-idp', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
+lambda_client = boto3.client('lambda', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
+s3_client = boto3.client('s3', region_name=AWS_REGION_PREDICTIA, aws_access_key_id=accessKeyId, aws_secret_access_key=secretAccessKey, aws_session_token=sessionToken)
 
 def lamdba_metrics():
     try:
@@ -123,6 +118,9 @@ def metricas_error():
         'forecasting_panel.html',
         select_panel_name="select_forecasting_panel",
         boxname="Panel de Precisión de Pronósticos",
+        accessKeyId=accessKeyId,
+        secretAccessKey=secretAccessKey,
+        sessionToken=sessionToken,
         mape_avg=mape_avg,
         mape_last_month=mape_last_month,
         bias_avg=bias_avg,
@@ -140,6 +138,9 @@ def datos_historicos():
         'historical_data_panel.html',
         select_panel_name="select_datos_historicos_panel",
         boxname="Datos Históricos",
+        accessKeyId=accessKeyId,
+        secretAccessKey=secretAccessKey,
+        sessionToken=sessionToken,
     )
 
 @app.route('/datospronosticados')
@@ -149,6 +150,9 @@ def datos_pronosticados():
         'forecasting_data_panel.html',
         select_panel_name="select_datos_historicos_panel",
         boxname="Datos Pronosticados",
+        accessKeyId=accessKeyId,
+        secretAccessKey=secretAccessKey,
+        sessionToken=sessionToken,
     )
 
 def lambda_get_ids_generic():
@@ -221,6 +225,9 @@ def index():
     return render_template(
         'index.html',
         bucket_name=bucket_name,
+        accessKeyId=accessKeyId,
+        secretAccessKey=secretAccessKey,
+        sessionToken=sessionToken,
         unique_ids = unique_ids,
         info_text_insights = lamdba_insights(),
         url_compra = orden_compra_url,
@@ -263,6 +270,9 @@ def login():
     else:
         return render_template(
             'login/login.html',
+            accessKeyId=accessKeyId,
+            secretAccessKey=secretAccessKey,
+            sessionToken=sessionToken,
         )
     
 @app.route('/set_new_password', methods=['POST'])

@@ -22,7 +22,7 @@ variable "cognito_pool_name" {
 variable "instance_type" {
  type        = string
  description = "AWS Instance Type"
- default     = "t2.micro"
+ default     = "t2.xlarge"
 }
 
 variable "ami" {
@@ -40,19 +40,19 @@ variable "bucket_name" {
 variable "accessKeyId" {
  type        = string
  description = "accessKeyId AWS"
- default     = ""
+ default     = " "
 }
 
 variable "secretAccessKey" {
  type        = string
  description = "secretAccessKey AWS"
- default     = ""
+ default     = " "
 }
 
 variable "sessionToken" {
  type        = string
  description = "sessionToken AWS"
- default     = ""
+ default     = "  "
  }
 
 variable "ssh_key_pair_name" {
@@ -70,7 +70,7 @@ variable "github_repo" {
 variable "private_key_ec2_path" {
  type        = string
  description = "PEM file path in your computer"
- default     = "/Users/tony/code/PredictIA/WebApp/predictia/utils/predictia.pem"
+ default     = "/Users/tony/code/PredictIA/predictia.pem"
 }
 
 variable "lambda_layer_pandas" {
